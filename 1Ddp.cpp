@@ -6,6 +6,7 @@ using namespace std;
 #include <bits/stdc++.h> 
 
 // QS - 1: Frog Jump +1/+2 steps - code studio
+// heights is eg: [60,20,30,80]
 
 // recursion approach
 
@@ -89,3 +90,39 @@ public:
         return dp[n-1];
     }
 };
+
+
+// QS - 3: climbing stairs - leetcode
+
+// if n==0 -> there is only 1 way 
+// if n==1 -> there is only 1 way
+// if n==2 -> there is 2 ways (1,1 / 2) steps
+
+class Solution {
+public:
+    int climbStairs(int n) {
+
+        if(n==0 || n==1) {
+            return 1;
+        }
+
+        if(n==2) {
+            return 2;
+        }
+
+        vector<int> dp(n+1,0);
+        dp[0] = 1;
+        dp[1] = 1;
+        
+        for(int i = 2; i<=n; i++) {
+            int fs = dp[i-1] + 1;
+            int ss = dp[i-2] + 2;
+
+            dp[i] = dp[i-1] + dp[i-2];
+        }
+
+        return dp[n];
+    }
+};
+
+
