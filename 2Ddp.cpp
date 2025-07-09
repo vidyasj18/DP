@@ -66,3 +66,98 @@ int ninjaTraining(int n, vector<vector<int>> &points)
     return dp[n-1][3];
 
 }
+
+// problems on grids
+
+// QS - 2 : Unique Paths in a grid from (0,0) to (m-1,n-1) - leetcode
+
+class Solution {
+public:
+    int uniquePaths(int m, int n) {
+        vector<vector<int>> dp(m+1,vector<int>(n+1,0) );
+
+        // we are starting the traversal from bottom (m-1,n-1)
+        // going towards (0,0)
+        
+        for(int i = 0; i<m; i++) {
+            for(int j = 0; j<n; j++) {
+                if(i==0 && j==0) {
+                    dp[0][0] = 1;
+                }
+
+                else {
+                    int left = 0;
+                    int up = 0;
+
+                    if(j>0) {
+                        left = dp[i][j-1];
+                    }
+
+                    if(i>0) {
+                        up = dp[i-1][j];
+                    }
+
+                    dp[i][j] = left + up;
+                }
+            }
+        }
+
+        return dp[m-1][n-1];
+    }
+};
+
+
+// QS - 3 : Unique Paths in a grid from (0,0) to (m-1,n-1) 2 - leetcode
+// some obstacle is present in a grid[i][j]
+
+class Solution {
+public:
+    int uniquePathsWithObstacles(vector<vector<int>>& obstacleGrid) {
+        int m = obstacleGrid.size();
+        int n = obstacleGrid[0].size();
+
+        // edge case - when given i/p - [[anything]] return 0
+        if(m==1 && n==1 && obstacleGrid[0][0] !=0) {
+            return 0;
+        }
+
+        // edge case - when given i/p - [[0]] - return 1
+        if(m==1 && n==1 && obstacleGrid[0][0] ==0) {
+            return 1;
+        }
+
+        // we traverse from bottom (m-1,n-1) to (0,0)
+        // we start counting paths from end
+        vector<vector<int>> dp(m,vector<int>(n,0));
+
+        for(int i = 0; i<m; i++) {
+            for(int j = 0; j<n; j++) {
+                if(i==0 && j==0) {
+                    dp[0][0] = 1;
+                }
+
+                else {
+                    int left = 0;
+                    int up = 0;
+
+                    // prsent grid should not be an obstacle
+                    // up grid should not be an obstacle
+                    if(i>0 && obstacleGrid[i][j]!=1 && obstacleGrid[i-1][j]!=1) {
+                        up = dp[i-1][j];
+                    }
+                    
+                    // prsent grid should not be an obstacle
+                    // left grid should not be an obstacle
+                    if(j>0 && obstacleGrid[i][j]!=1 && obstacleGrid[i][j-1]!=1) {
+                        left = dp[i][j-1];
+                    }
+
+                        dp[i][j] = left + up;
+                }
+            }
+        }
+
+        return dp[m-1][n-1];
+    }
+};
+
