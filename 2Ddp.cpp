@@ -244,3 +244,54 @@ public:
     }
 };
 
+
+// QS - 6 : Minimum falling sum - Leetcode
+
+// Given an n x n array of integers matrix, return the minimum sum of any falling path through matrix.
+// A falling path starts at any element in the first row and chooses the element in the next row 
+// that is either directly below or diagonally left/right. 
+// Specifically, the next element from position (row, col) will be (row + 1, col - 1), (row + 1, col), or (row + 1, col + 1).
+
+class Solution {
+public:
+    int minFallingPathSum(vector<vector<int>>& matrix) {
+        int n = matrix.size();
+        vector<vector<int>> dp(n,vector<int>(n,0)); 
+
+        // last row dp vector is assigned with matrix[n-1][j] elements
+        for(int j = 0; j<n; j++) {
+            dp[n-1][j] = matrix[n-1][j];
+        }
+
+        // bottom up approach
+        for(int i = n-2; i>=0; i--) {
+            for(int j = n-1; j>=0; j--) {
+                // same col 1 row above
+                int d = matrix[i][j] + dp[i+1][j];
+                // above row diagonally col+1
+                int dg1 = INT_MAX;
+                int dg2 = INT_MAX;
+                if(j<n-1) {
+                    dg1 = matrix[i][j] + dp[i+1][j+1];
+                }
+                
+                // above row diagonally col-1
+                if(j>0) {
+                    dg2 = matrix[i][j] + dp[i+1][j-1];
+                }
+
+                dp[i][j] = min(d,min(dg1,dg2));
+            }
+        }
+
+        // minimum sum which lies in the first row - that is the ans
+
+        int mini = INT_MAX;
+        for(int j = 0; j<n; j++) {
+            mini = min(mini,dp[0][j]);
+        }
+
+        return mini;
+    }
+};
+
