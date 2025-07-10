@@ -204,3 +204,43 @@ public:
     }
 };
 
+
+// QS - 5 : Triangle - leetcode
+// Given a triangle array, return the minimum path sum from top to bottom.
+// For each step, you may move to an adjacent number of the row below. 
+// More formally, if you are on index i on the current row, you may move to either index i or index i + 1 on the next row.
+
+
+class Solution {
+public:
+    int minimumTotal(vector<vector<int>>& triangle) {
+        int n = triangle.size();
+        vector<vector<int>> dp(n,vector<int>(n,-1));
+
+        // base case
+        for(int j = 0; j<n; j++) {
+            dp[n-1][j] = triangle[n-1][j];
+        }
+
+        // doing it from bottom to top
+        for(int i = n-2; i>=0; i--) {
+            for(int j = i; j>=0; j--) {
+
+                int d;
+                int dg;
+
+                // down of i th row and same col j
+                d = triangle[i][j] + dp[i+1][j];
+
+                // diagonal of ith row and j+1 col
+                dg = triangle[i][j] + dp[i+1][j+1];
+
+                dp[i][j] = min(d,dg);
+            }
+            
+        }
+
+        return dp[0][0];
+    }
+};
+
