@@ -84,3 +84,79 @@ public:
         return dp[n-1][sum/2];
     }
 };
+
+// QS - 3 : count subsets with sum k
+
+// recursion approach
+
+int f(int ind,int sum,vector<int> &arr) {
+	if(sum==0) return 1;
+	if(ind==0) return arr[0]==sum;
+
+	int notake = f(ind-1,sum,arr);
+	int take = 0;
+	if(arr[ind]<=sum) {
+		take = f(ind-1,sum-arr[ind],arr);
+	}
+
+	return notake + take;
+}
+
+// better approach - memorisation
+
+int f(int ind, int sum,vector<int> &arr,vector<vector<int>> &dp) {
+	if(sum==0) return 1;
+
+	if(ind==0) return arr[0]==sum;
+
+	if(dp[ind][sum]!=-1) return dp[ind][sum];
+
+	int notake = f(ind-1,sum,arr,dp);
+
+	int take = 0;
+	if(arr[ind]<=sum) {
+		take = f(ind-1,sum-arr[ind],arr,dp);
+	}
+
+	return dp[ind][sum] = take + notake;
+}
+
+int findWays(vector<int>& arr, int k)
+{
+	// recursion 
+	int n = arr.size();
+	return f(n-1,k,arr);
+
+	// better app - memorisation
+
+	vector<vector<int>> dp(n,vector<int>(k+1,-1));
+	return f(n-1,k,arr,dp);
+
+	// optimised approach - tabulation
+
+	int n = arr.size();
+	vector<vector<int>> dp(n,vector<int>(k+1,0));
+
+	for(int i = 0; i<n; i++) {
+		dp[i][0] = 1;
+	}
+
+	if(arr[0]<=k) {
+		dp[0][arr[0]] = 1;
+	}
+
+	for(int ind = 1; ind<n; ind++) {
+		for(int sum = 0; sum<=k; sum++) {
+			int notake = dp[ind-1][sum];
+			int take = 0;
+
+			if(arr[ind]<=sum) {
+				take = dp[ind-1][sum-arr[ind]];
+			}
+
+			dp[ind][sum] = take + notake;
+		}
+	}
+
+	return dp[n-1][k];
+}
