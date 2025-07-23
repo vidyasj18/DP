@@ -246,3 +246,75 @@ public:
         return ans;
     }
 };
+
+
+// qs - 6 : target sum - Leetcode
+// You want to build an expression out of nums by adding one of the symbols '+' and '-' 
+// before each integer in nums and then concatenate all the integers.
+
+// For example, if nums = [2, 1], you can add a '+' before 2 and a '-' 
+// before 1 and concatenate them to build the expression "+2-1".
+// Return the number of different expressions that you can build, which evaluates to target.
+
+class Solution {
+public:
+    int findTargetSumWays(vector<int>& nums, int target) {
+        // s1 - s2 = target
+        // s1 = s2 + target
+        // we know how to calculate subsets of s1 sum 
+        // by iterating till s1/2 from 0 as target
+
+        int totSum = 0;
+        int n = nums.size();
+        for(int i = 0; i<n; i++) {
+            totSum += nums[i];
+        }
+
+        // target sum we should be calculating for the number of ways
+        int sum = (totSum + target)/2;
+
+        // Base Case
+
+        // sum must be even
+        // target should be less than totalSum
+        // or else return 0
+        if ((totSum + target) % 2 != 0 || abs(target) > totSum)
+            return 0;
+
+        vector<vector<int>> dp(n,vector<int>(sum+1,0));
+
+        for(int tar = 0; tar<=sum; tar++) {
+            // if at 0th index nums[0] = tar then mark the dp as 1
+            if(nums[0]==tar) {
+                dp[0][tar] = 1;
+            }
+        }
+
+        // when the target becomes = 0 then mark as 1
+        for(int i = 0; i<n; i++) {
+            dp[i][0] = 1;
+        }
+
+        // edge case - when given elem is 0 and target is also 0
+        // return 2 - 2 ways is the ans
+        if(nums[0]==0) {
+            dp[0][0] = 2;
+        }
+
+        for(int ind = 1; ind<n; ind++) {
+            for(int tar = 0; tar<=sum; tar++) {
+                int nottake = dp[ind-1][tar];
+                int take = 0;
+
+                if(nums[ind]<=tar) {
+                    take = dp[ind-1][tar-nums[ind]];
+                }
+
+                // here we need to consider all possible ways so add both
+                dp[ind][tar] = take + nottake;
+            }
+        }
+
+        return dp[n-1][sum];
+    }
+};
