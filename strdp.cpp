@@ -68,3 +68,60 @@ public:
 
     }
 };
+
+
+// qs - 2 : print longest subsequence
+
+string findLCS(int n, int m,string &s1, string &s2){
+	vector<vector<int>> dp(n+1,vector<int>(m+1,0));
+	for(int i = 0; i<n; i++) {
+		for(int j = 0; j<m; j++) {
+			dp[0][j] = 0;
+			dp[i][0] = 0;
+		}
+	}	
+
+	for(int i = 1; i<=n; i++) {
+		for(int j = 1; j<=m; j++) {
+			if(s1[i-1]==s2[j-1]) {
+				dp[i][j] = 1 + dp[i-1][j-1];
+			}
+
+			else {
+				dp[i][j] = max(dp[i-1][j],dp[i][j-1]);
+			}
+		}
+	}
+
+    // len is the length of longest subsequence
+	int len = dp[n][m];
+    
+    // push ans by random thing before
+	string ans = "";
+	for(int i = 0; i<len; i++) {
+		ans += "&";
+	}
+
+    // compare from the ends of both the strings and push it inside the ans string from behind
+	int ind = len-1;
+	int i = n;
+	int j = m;
+	while(i>0 && j>0) {
+		if(s1[i-1]==s2[j-1]) {
+			ans[ind] = s1[i-1];
+			ind--;
+			i--;
+			j--;
+		}
+
+		else if(dp[i][j-1]>dp[i-1][j]) {
+			j--;
+		}
+
+		else {
+			i--;
+		}
+	}
+
+	return ans;
+}
