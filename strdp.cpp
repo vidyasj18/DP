@@ -125,3 +125,39 @@ string findLCS(int n, int m,string &s1, string &s2){
 
 	return ans;
 }
+
+
+// qs - 3 : Longest palindromic subsequence
+// 1 string s is given in the question
+
+class Solution {
+public:
+    int longestPalindromeSubseq(string s) {
+        int n = s.length();
+        vector<vector<int>> dp(n+1,vector<int>(n+1,0));
+        // create a new string s1 and store the reverse of s into it
+        string s1 = s;
+        reverse(s1.begin(),s1.end());
+        
+        // rest is same as longest common subsequence problem qs
+        // base case
+        for(int i = 0; i<n; i++) {
+            dp[i][0] = 0;
+            dp[0][i] = 0;
+        } 
+
+        for(int ind1 = 1; ind1<=n; ind1++) {
+            for(int ind2 = 1; ind2<=n; ind2++) {
+                if(s[ind1-1]==s1[ind2-1]) {
+                    dp[ind1][ind2] = 1 + dp[ind1-1][ind2-1];
+                }
+
+                else {
+                    dp[ind1][ind2] = max(dp[ind1-1][ind2],dp[ind1][ind2-1]);
+                }
+            }
+        }
+
+        return dp[n][n];
+    }
+};
