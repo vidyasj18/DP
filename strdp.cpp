@@ -202,3 +202,77 @@ public:
         return ans1;
     }
 };
+
+
+// qs - 6 : shortest common supersequence
+// Input: str1 = "abac", str2 = "cab"     Output: "cabac"
+
+class Solution {
+public:
+    string shortestCommonSupersequence(string str1, string str2) {
+        int m = str1.size();
+        int n = str2.size();
+        vector<vector<int>> dp(m+1,vector<int>(n+1,0));
+
+        for(int i = 0; i<=m; i++)  {
+            dp[i][0] = 0;
+        }
+
+        for(int i = 0; i<=n; i++) {
+            dp[0][i] = 0;
+        }
+
+        for(int ind1 = 1; ind1<=m; ind1++) {
+            for(int ind2 = 1; ind2<=n; ind2++) {
+                if(str1[ind1-1]==str2[ind2-1]) {
+                    dp[ind1][ind2] = 1 + dp[ind1-1][ind2-1];
+                }
+
+                else {
+                    dp[ind1][ind2] = max(dp[ind1-1][ind2],dp[ind1][ind2-1]);
+                }
+            }
+        }
+        
+        string temp = "";
+
+        int i = m; 
+        int j = n;
+        while(i>0 && j>0) {
+            if(str1[i-1]==str2[j-1]) {
+                temp += str1[i-1];
+                i--;
+                j--;
+            }
+
+            else if(dp[i-1][j]>dp[i][j-1]) {
+                temp += str1[i-1];
+                i--;
+            }
+
+            else {
+                temp += str2[j-1];
+                j--;
+            }
+        }
+
+        // if j becomes lesser than or equal to 0
+        // push remaining str1 elements inside res
+        while(i>0) {
+            temp += str1[i-1];
+            i--;
+        }
+
+        // if i becomes lesser than or equal to 0
+        // push remaining str2 elements inside res
+        while(j>0) {
+            temp += str2[j-1];
+            j--;
+        }
+        
+        // reverse the string as we built backwards
+        reverse(temp.begin(),temp.end());
+        return temp;
+
+    }
+};
