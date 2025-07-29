@@ -321,3 +321,46 @@ public:
         return dp[m][n];
     }
 };
+
+
+// qs - 8 : Minimum inseertion steps to make a string palindrome - Leetcode
+// ans : total length of the string - length of the longest palindromic sequence
+// create a new string same as given string and reverse that string and compare both the strings from 
+// indexes behind and calculate the length of the longest palindromic subsequence
+
+class Solution {
+public:
+    int minInsertions(string s) {
+        int n = s.size();
+        
+        // create string s1 and reverse it
+        // so that it is easier to compare from the last indexes
+        string s1 = s;
+        reverse(s1.begin(),s1.end());
+
+        // dp array
+        vector<vector<int>> dp(n+1,vector<int>(n+1,0));
+
+        // find the length of the longest palindromic sequence 
+        // given in the s string
+        // base case
+        for(int i = 0; i<n; i++) {
+            dp[i][0] = 0;
+            dp[0][i] = 0;
+        }
+
+        for(int i = 1; i<=n; i++) {
+            for(int j = 1; j<=n; j++) {
+                if(s[i-1]==s1[j-1]) {
+                    dp[i][j] = 1 + dp[i-1][j-1];
+                }
+
+                else {
+                    dp[i][j] = max(dp[i-1][j],dp[i][j-1]);
+                }
+            }
+        }
+
+        return n-dp[n][n];
+    }
+};
