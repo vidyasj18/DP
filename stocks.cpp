@@ -145,3 +145,56 @@ public:
 };
 
 
+// qs - 2 : best time to buy and sell stock 1
+
+class Solution {
+public:
+    int maxProfit(vector<int>& prices) {
+
+        // brute force approach
+        long long ans = 0;
+
+        for(long long i = 0; i<prices.size(); i++) {
+            for(long long j = i+1; j<prices.size(); j++) {
+                if(prices[j]-prices[i] > ans) {
+                    ans = prices[j] - prices[i];
+                }
+            }
+        }
+
+        return ans;
+
+        // optimised approach - using kadane's algo.
+
+        int buy = prices[0];
+        int profit = 0;
+
+        // iterate from after the buy function. buy = 0 so start from 1.
+        for(int i = 1; i<prices.size(); i++) {
+            if(prices[i]<buy) {
+                buy = prices[i];
+            }
+
+            else if(profit < prices[i] - buy) {
+                profit = prices[i] - buy;
+            }
+        }
+
+        // return profit;
+
+        // another approach
+
+        int maxProfit = 0;
+        int mini = prices[0];
+        int n = prices.size();
+
+        for(int i = 0; i<n; i++) {
+            int cost = prices[i];
+
+            maxProfit = max(maxProfit,cost-mini);
+            mini = min(mini,cost);
+        }
+
+        return maxProfit;
+    }
+};
